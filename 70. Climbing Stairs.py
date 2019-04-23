@@ -1,15 +1,12 @@
 class Solution:
     def climbStairs(self, n: int) -> int:
-        self.mem = [None] * (n + 1)
-        return self.helper(n)
-    
-    def helper(self, n):
-        if n == 1:
-            return 1
-        if n == 2:
-            return 2
-        if self.mem[n]:
-            return self.mem[n]
-        else:
-            self.mem[n] = self.helper(n - 1) + self.helper(n - 2)
-            return self.mem[n]
+        self.mem = {}
+        def recur(n):
+            if n in self.mem:
+                return self.mem[n]
+            if n in [0, 1, 2, 3]:
+                return n
+            res = recur(n-1) + recur(n-2)
+            self.mem[n] = res
+            return res
+        return recur(n)
