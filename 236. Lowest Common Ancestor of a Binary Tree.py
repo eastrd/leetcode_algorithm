@@ -4,28 +4,25 @@
 #         self.val = x
 #         self.left = None
 #         self.right = None
+from collections import deque
 
 class Solution:
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
-        def path_to_x(node, x):
+        def find_path(node, x):
             if not node:
-                return None
+                return []
             if node == x:
                 return [node]
-            left, right = path_to_x(node.left, x), path_to_x(node.right, x)
-            if left:
-                return [node] + left
-            if right:
-                return [node] + right
-            return None
-        path_to_p = path_to_x(root, p)
-        path_to_q = path_to_x(root, q)
-        
+            l, r = find_path(node.left, x), find_path(node.right, x)
+            if l:
+                return [node] + l
+            if r:
+                return [node] + r
+            return []
+        path_p, path_q = deque(find_path(root, p)), deque(find_path(root, q))
         lowest = None
-        while path_to_p and path_to_q:
-            a, b = path_to_p.pop(0), path_to_q.pop(0)
+        while path_p and path_q:
+            a, b = path_p.popleft(), path_q.popleft()
             if a == b:
                 lowest = a
-            else:
-                break
         return lowest
